@@ -52,7 +52,7 @@ public class Obra {
     
     @Override
     public String toString () {
-        return "Obra nº" + id + ": " + ((titulo==null || titulo.isEmpty())?("?"):(titulo)) + " (" + ((ano==null)?("?"):(ano)) + ")";
+        return "Obra nº" + id + ": " + ((titulo==null || titulo.isEmpty())?("?"):(titulo)) + " (" + ((ano==null)?("?"):((ano<0)?((-ano) + " a.C."):(ano))) + ")";
     }
 
     @Override

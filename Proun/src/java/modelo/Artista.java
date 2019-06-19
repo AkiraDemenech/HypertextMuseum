@@ -12,6 +12,7 @@ public class Artista {
     private static int id_artista = 0;
     public static final List<Artista> artistas = new ArrayList<>();
     
+    
     public static Artista get (int id){
         for (Artista a: artistas)
             if (a.id == id)

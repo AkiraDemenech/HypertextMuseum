@@ -15,7 +15,7 @@
 
 .column {
   float: left;
-  width: 33.33%;
+  width: 27%;
   padding: 10px;
 }
 
@@ -61,23 +61,23 @@
             <input type="checkbox" name="<%
                 out.print("A" + c);
             %>" value="<%
-                out.print(Artista.artistas.get(c).getId());
+                out.print(Artista.artistas.get(c).getId()); //BD alteraria
             %>"><%
-                out.println(Artista.artistas.get(c));
-            %>[<a href="index.jsp?a=<%out.print(Artista.artistas.get(c).getId());%>">ver mais</a>]<br>
+                out.println(Artista.artistas.get(c)); //BD alteraria
+            %>[<a href="index.jsp?a=<%out.print(Artista.artistas.get(c).getId());%>">ver mais</a>]<br> <!--BD Alteraria-->
                         <%}%>
                         <br>
                     Linguagens:<br><%
-                        for (int c=0; c<Suporte.suportes.size(); c++) {
+                        for (int c=0; c<Suporte.suportes.size(); c++) { //BD alteraria
                     %>
             
             <input type="checkbox" name="<%
                 out.print("S" + c);
             %>" value="<%
-                out.print(Suporte.suportes.get(c).getId());
+                out.print(Suporte.suportes.get(c).getId()); //BD alteraria
             %>"><%
-                out.println(Suporte.suportes.get(c));
-            %>[<a href="index.jsp?s=<%out.print(Suporte.suportes.get(c).getId());%>">ver mais</a>]<br>
+                out.println(Suporte.suportes.get(c)); //BD alteraria
+            %>[<a href="index.jsp?s=<%out.print(Suporte.suportes.get(c).getId());%>">ver mais</a>]<br> <!--BD Alteraria-->
                         <%}%>
                     <br><input type="submit" value="Submeter obra" name="okart" />
                 </form>
@@ -109,10 +109,10 @@
             
             for (Obra o: Obra.obras) {
                 if(art!=null) {
-                    if(!o.autores.contains(art))
+                    if(!o.autores.contains(art)) //
                       continue;
                 } else if (sup!=null ) {
-                    if(!o.linguagens.contains(sup))
+                    if(!o.linguagens.contains(sup)) //
                       continue;
                 }
         %>
@@ -172,5 +172,5 @@
         %>
       <p>
     </body>
-  <img src="bder.png" title="MER e DER do Banco de Dados" alt='MER e DER do Banco de Dados'>
+  <img src="bder.png" title="MER e DER do Banco de Dados criado mas não utilizado" alt='MER e DER do Banco de Dados criado porém não utilizado'>
 </html>

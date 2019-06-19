@@ -38,7 +38,7 @@ public class NewSuporte extends HttpServlet {
      */
     @Override
     public String getServletInfo() {
-        return "Cadastrar Artista";
+        return "Cadastrar Suporte";
     }// </editor-fold>
 
 }

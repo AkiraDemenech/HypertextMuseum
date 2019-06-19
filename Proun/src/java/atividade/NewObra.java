@@ -54,7 +54,7 @@ public class NewObra extends HttpServlet {
      */
     @Override
     public String getServletInfo() {
-        return "Cadastrar Artista";
+        return "Cadastrar Obra";
     }// </editor-fold>
 
 }
