@@ -2,6 +2,7 @@ package modelo;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Objects;
+import modelo.dados.ArtistaDAO;
 
 public class Artista {
     
@@ -14,26 +15,29 @@ public class Artista {
     
     
     public static Artista get (int id){
-        for (Artista a: artistas)
-            if (a.id == id)
-                return a;
-        return null;
-    }
-    public static boolean set (Artista a) {
-        a.id = id_artista++;
-        return artistas.add(a);
+//      for (Artista a: artistas)
+//          if (a.id == id)
+//              return a;
+        return new ArtistaDAO().select(id);//null;
     }
     public static boolean remove (int id) {
-        for (int c=0; c<artistas.size(); c++)
-            if (artistas.get(c).id == id)
-                return artistas.remove(c)!=null;
-        return false;
+//      for (int c=0; c<artistas.size(); c++)
+//          if (artistas.get(c).id == id)
+//              return artistas.remove(c)!=null;
+        return new ArtistaDAO().delete(id);//false;
+    }
+    public boolean insertInto () {
+        if (artistas.contains(this))
+            return false;
+        id = id_artista++;
+        return artistas.add(this);
     }
     
     public int getId () { return id; }
     public String getNome () { return nome; }
     public String getAssinatura () { return assinatura; }
     
+    public void setId (int id) { this.id = id; }
     public void setNome (String nome) { this.nome = nome; }
     public void setAssinatura (String assinatura) { this.assinatura = assinatura; }
     

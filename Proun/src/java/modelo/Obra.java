@@ -2,6 +2,7 @@ package modelo;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Objects;
+import modelo.dados.ObraDAO;
 
 public class Obra {
     
@@ -17,14 +18,16 @@ public class Obra {
     public static final List<Obra> obras = new ArrayList<>();
     
     public static Obra get (int id) {
-        for (Obra o : obras)
-            if (o.id == id)
-                return o;
-        return null;
+//      for (Obra o : obras)
+//          if (o.id == id)
+//              return o;
+        return new ObraDAO().select(id);//null;
     }
-    public static boolean set (Obra o) {
-        o.id = id_obra++;
-        return obras.add(o);
+    public boolean insertInto () {
+        if (obras.contains(this))
+            return false;
+        id = id_obra++;
+        return obras.add(this);
     }
     public static boolean remove (int id) {
         for (int c=0; c<obras.size(); c++)

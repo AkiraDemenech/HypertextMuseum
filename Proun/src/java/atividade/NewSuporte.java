@@ -25,7 +25,7 @@ public class NewSuporte extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        if (Suporte.set(new Suporte(request.getParameter("Descricao"))))
+        if (new Suporte(request.getParameter("Descricao")).insertInto())
             response.sendRedirect("index.jsp");
         else
             response.getWriter().println("<script>alert('Erro');window.location.replace(\"index.jsp\");</script>");

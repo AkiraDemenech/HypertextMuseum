@@ -33,7 +33,7 @@ public class NewObra extends HttpServlet {
         } catch (NumberFormatException n) {  }
         Obra nova = new Obra(request.getParameter("Titulo"), request.getParameter("URL"), a);
         
-        if (Obra.set(nova)) {
+        if (nova.insertInto()) {
             for (int c=0; c<Artista.artistas.size() || c<Suporte.suportes.size(); c++) {
                 try {
                     nova.autores.add(Artista.get(Integer.parseInt(request.getParameter("A" + c))));

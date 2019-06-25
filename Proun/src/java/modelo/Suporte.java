@@ -2,6 +2,7 @@ package modelo;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Objects;
+import modelo.dados.SuporteDAO;
 
 public class Suporte {
     
@@ -13,20 +14,22 @@ public class Suporte {
     public static final List<Suporte> suportes = new ArrayList<>();
     
     public static Suporte get (int id) {
-        for (Suporte s : suportes)
-            if (s.id == id)
-                return s;
-        return null;
-    }
-    public static boolean set (Suporte s) {
-        s.id = id_suporte++;
-        return suportes.add(s);
+//      for (Suporte s : suportes)
+//          if (s.id == id)
+//              return s;
+        return new SuporteDAO().select(id);//null;
     }
     public static boolean remove (int id) {
-        for (int c=0; c<suportes.size(); c++)
-            if (suportes.get(c).id == id)
-                return suportes.remove(c)!=null;
-        return false;
+//      for (int c=0; c<suportes.size(); c++)
+//          if (suportes.get(c).id == id)
+//              return suportes.remove(c)!=null;
+        return new SuporteDAO().delete(id);//false;
+    }
+    public boolean insertInto () {
+        if (suportes.contains(this))
+            return false;
+        id = id_suporte++;
+        return suportes.add(this);
     }
     
     public int getId () { return id; }

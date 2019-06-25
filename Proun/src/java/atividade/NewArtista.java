@@ -25,7 +25,7 @@ public class NewArtista extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        if (Artista.set(new Artista(request.getParameter("Nome"), request.getParameter("Assinatura"))))
+        if (new Artista(request.getParameter("Nome"), request.getParameter("Assinatura")).insertInto())
             response.sendRedirect("index.jsp");
         else
             response.getWriter().println("<script>alert('Erro');window.location.replace(\"index.jsp\");</script>");

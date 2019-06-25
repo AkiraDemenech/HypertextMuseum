@@ -2,6 +2,9 @@
 <%@page import="modelo.Obra"%>
 <%@page import="modelo.Suporte"%>
 <%@page import="modelo.Artista"%>
+<%@page import="modelo.dados.SuporteDAO"%>
+<%@page import="modelo.dados.ArtistaDAO"%>
+
 <!DOCTYPE html>
 
 <html>
@@ -25,27 +28,42 @@
   clear: both;
 }
 </style>
+
+<script>
+    function night_mode () {
+        var is_day = document.getElementById('db').getAttribute('src').includes('der');
+        document.getElementById('db').setAttribute('src', ((is_day)?('bm'):('bd')) + "er.png");
+        document.getElementById('bd').setAttribute('style', 'background-color: ' + ((is_day)?('black'):('white')) + '; color: ' + ((is_day)?('#00FF00'):('black')) + '; font-family: ' + ((is_day)?('Consolas'):('Times New Roman')) + ';')
+        is_day = !is_day;
+        //alert(is_day);
+        //return 0;
+    }
+</script>
         
         <title>
             <%
                 Suporte sup = null;
                 Artista art = null;
                 try {
-                    art = Artista.get(Integer.parseInt(request.getParameter("a")));
+                    art = new ArtistaDAO().select(Integer.parseInt(request.getParameter("a")));
                     out.println(art);
                 } catch (NumberFormatException n) {
                     try {
-                        sup = Suporte.get(Integer.parseInt(request.getParameter("s")));
+                        sup = new SuporteDAO().select(Integer.parseInt(request.getParameter("s")));
                         out.println(sup);
                     } catch (NumberFormatException m) {
                         out.println("Hypertext Museum Language");
                     }
                 }  
-            %>
+            %> 
         </title>
     </head>
     
-    <body>
+    <body id="bd">
+        <button id="bt" onClick="night_mode()">
+            Modo temporariamente escuro
+        </button>
+      
         <div class="row">
             
             <div class="column">
@@ -104,7 +122,7 @@
         
         <%
             if (art!=null || sup!=null)
-                out.println("<h2>[<a href='Cadastrar"+((sup==null)?("Artista?id="+art.getId()):("Suporte?id="+sup.getId()))+"'>Apagar "+((art==null)?("suporte"):("artista"))+"</a>]</h2>"+
+                out.println("<h2>[<button onClick=\"javascript:window.location.href='Cadastrar"+((sup==null)?("Artista?id="+art.getId()):("Suporte?id="+sup.getId()))+"'\">Apagar "+((art==null)?("suporte"):("artista"))+"</button>]</h2>"+
                             "<h1><a href='index.jsp'>Voltar para a galeria completa</h1></a>");
             
             for (Obra o: Obra.obras) {
@@ -123,7 +141,7 @@
                 if (o==null)
                     continue;
             %>
-            [<a href='CadastrarObra?id=<%=o.getId()%>'>Apagar obra</a>]
+            [<button onClick='javascript:window.location.href="CadastrarObra?id=<%=o.getId()%>"'>Apagar obra</button>]
         </h2>
         
         <%
@@ -171,6 +189,8 @@
             }
         %>
       <p>
+       <div style="text-align: right;">
+          <img id="db" src="bder.png" title="MER e DER do Banco de Dados criado mas não utilizado" alt='MER e DER do Banco de Dados criado porém não utilizado'>
+       </div>
     </body>
-  <img src="bder.png" title="MER e DER do Banco de Dados criado mas não utilizado" alt='MER e DER do Banco de Dados criado porém não utilizado'>
 </html>
