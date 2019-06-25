@@ -1,4 +1,4 @@
-
+﻿
 package atividade.dados;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -8,7 +8,7 @@ public class IndConnector {
     public Connection getConnection() {
         try {
             return DriverManager.getConnection(
-                   "jdbc:mysql://localhost:3306/proeto",
+                   "jdbc:mysql://localhost:3306/unovis",
                    "root", "senha");
         } catch (SQLException e) {
             throw new RuntimeException(e);

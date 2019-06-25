@@ -1,6 +1,6 @@
-create database proeto;
+create database unovis;
 
-use proeto;
+use unovis;
 
 CREATE TABLE obra (
   id integer AUTO_INCREMENT primary key,
