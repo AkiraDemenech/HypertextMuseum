@@ -1,56 +1,47 @@
 package modelo;
-import java.util.List;
-import java.util.ArrayList;
 import java.util.Objects;
-import modelo.dados.SuporteDAO;
+import java.io.Serializable;
+import javax.persistence.Id;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 
-public class Suporte {
+@Entity
+public class Suporte implements Serializable {
     
-    
-    private int id = 0;
+    @Id
+    @GeneratedValue ( strategy = GenerationType.SEQUENCE )
+    private Long id;
     private String descricao;
     
-    private static int id_suporte = 0;
-    public static final List<Suporte> suportes = new ArrayList<>();
+//    private static int id_suporte = 0;
+//    public static final List<Suporte> suportes = new ArrayList<>();
     
-    public static Suporte get (int id) {
-//      for (Suporte s : suportes)
-//          if (s.id == id)
-//              return s;
-        return new SuporteDAO().select(id);//null;
-    }
-    public static boolean remove (int id) {
-//      for (int c=0; c<suportes.size(); c++)
-//          if (suportes.get(c).id == id)
-//              return suportes.remove(c)!=null;
-        return new SuporteDAO().delete(id);//false;
-    }
-    public boolean insertInto () {
-        if (suportes.contains(this))
-            return false;
-        id = id_suporte++;
-        return suportes.add(this);
-    }
-    
-    public int getId () { return id; }
-    public String getDescricao () { return descricao; }
-    
+    public void setId (Long id) { this.id = id; }
     public void setDescricao (String descricao) { this.descricao = descricao; }
+    
+    public Long getId () { return id; }
+    public String getDescricao () { return descricao; }
     
     public Suporte (String descricao) {
         if (!"".equals(descricao))
             this.descricao = descricao;
     }
+    public Suporte (String descricao, Long id) {
+        this(descricao);
+        this.id = id;
+    }
+    public Suporte () {}
     
     @Override
     public String toString () {
-        return "Suporte nº" + id + ": " + ((descricao==null || descricao.isEmpty())?("?"):(descricao));
+        return "Suporte nº" + (id + 1) + ": " + ((descricao==null || descricao.isEmpty())?("?"):(descricao));
     }
 
     @Override
     public int hashCode () {
         int hash = 7;
-        hash = 13 * hash + this.id;
+        hash = 13 * hash + Objects.hashCode(this.id);
         hash = 13 * hash + Objects.hashCode(this.descricao);
         return hash;
     }
@@ -64,7 +55,7 @@ public class Suporte {
             return false;
         
         Suporte s = (Suporte) obj;
-        return this.id == s.id && Objects.equals(this.descricao, s.descricao);
+        return Objects.equals(this.id, s.id) && Objects.equals(this.descricao, s.descricao);
     }
     
 }

@@ -1,18 +1,11 @@
-﻿
+
 package atividade.dados;
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.sql.DriverManager;
+import javax.persistence.Persistence;
+import javax.persistence.EntityManager;
 
 public class IndConnector {
-    public Connection getConnection() {
-        try {
-            return DriverManager.getConnection(
-                   "jdbc:mysql://localhost:3306/unovis",
-                   "root", "senha");
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+    public static EntityManager getConnection() {
+        return Persistence.createEntityManagerFactory("lunarcharsky").createEntityManager();
     }
 }
 
@@ -23,4 +16,6 @@ public class IndConnector {
     que a estrutura de listas foi mais que aceita.
 
     Então essa classe está aqui como uma segunda torre de igreja incompleta de MG ou BA, um cotoco de outros planos decepados sem conclusão.
+
+  //POSFÁCIO À SEGUNDA EDIÇÃO: obsolescência desfeita pela responsabilidade da JPA;
 */

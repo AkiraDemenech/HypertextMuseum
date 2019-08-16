@@ -1,67 +1,77 @@
 package modelo;
-import java.util.List;
-import java.util.ArrayList;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.FetchType;
+import javax.persistence.OneToMany;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import java.io.Serializable;
 import java.util.Objects;
-import modelo.dados.ObraDAO;
+import java.util.List;
 
-public class Obra {
+@Entity
+public class Obra implements Serializable {
     
-    private int id = 0;
+    @Id
+    @GeneratedValue ( strategy = GenerationType.SEQUENCE )
+    private Long id;
     private String titulo;
     private String url;
     private Integer ano;
     
-    public final List<Artista> autores = new ArrayList<>();
-    public final List<Suporte> linguagens = new ArrayList<>();
+    @OneToMany(fetch=FetchType.LAZY)
+    private List<Artista> autores;
+    @OneToMany(fetch=FetchType.LAZY)
+    private List<Suporte> linguagens;
     
-    private static int id_obra = 0;
-    public static final List<Obra> obras = new ArrayList<>();
-    
-    public static Obra get (int id) {
-//      for (Obra o : obras)
-//          if (o.id == id)
-//              return o;
-        return new ObraDAO().select(id);//null;
-    }
-    public boolean insertInto () {
-        if (obras.contains(this))
-            return false;
-        id = id_obra++;
-        return obras.add(this);
-    }
-    public static boolean remove (int id) {
-        for (int c=0; c<obras.size(); c++)
-            if (obras.get(c).id == id)
-                return obras.remove(c)!=null;
-        return false;
-    }
-    
-    public int getId () { return id; }
-    public String getTitulo () { return titulo; }
-    public String getUrl () { return url; }
-    public Integer getAno () { return ano; }
+//    private static int id_obra = 0;
+//    public static final List<Obra> obras = new ArrayList<>();
         
+    public void setId (Long id) { this.id = id; }
     public void setTitulo (String titulo) { this.titulo = titulo; }
     public void setUrl (String url) { this.url = url; }
     public void setAno (Integer ano) { this.ano = ano; }
     
+    public void setLinguagem (Suporte s){  if(linguagens!=null && s!=null) linguagens.add(s);  }
+    public void setAutor (Artista a)    {  if(autores!=null && a!=null)    autores.add(a);     }
+    public void setAutores (List<Artista> a)    {  this.autores = a;    }
+    public void setLinguagens (List<Suporte> s) {  this.linguagens = s; }
+    public List<Suporte> getLinguagens (){    return linguagens; }
+    public List<Artista> getAutores ()    {    return autores;    }
+    
+    public Long getId () { return id; }
+    public String getTitulo () { return titulo; }
+    public String getUrl () { return url; }
+    public Integer getAno () { return ano; }
+    
     public Obra (String titulo, String url, Integer ano) {
         if (!"".equals(titulo))
             this.titulo = titulo;
-        if (!"".equals(ano))
+        if (!"".equals(url))
             this.url = url;
         this.ano = ano;
+        
     }
+    public Obra (String titulo, String url, Integer ano, List<Artista> a, List<Suporte> s) {
+        this(titulo,url,ano);
+        this.linguagens = s;
+        this.autores = a;
+    }
+    public Obra (String titulo, String url, Integer ano, List<Artista> a, List<Suporte> s, Long id) {
+        this(titulo,url,ano,a,s);
+        this.id = id;
+    }
+    public Obra () {}
     
     @Override
     public String toString () {
-        return "Obra nº" + id + ": " + ((titulo==null || titulo.isEmpty())?("?"):(titulo)) + " (" + ((ano==null)?("?"):((ano<0)?((-ano) + " a.C."):(ano))) + ")";
+        return "Obra nº" + (id+1) + ": " + ((titulo==null || titulo.isEmpty())?("?"):(titulo)) + " (" + ((ano==null)?("?"):((ano<0)?((-ano) + " a.C."):(ano))) + ")";
     }
 
     @Override
     public int hashCode () {
         int hash = 5;
-        hash = 67 * hash + this.id;
+        hash = 67 * hash + Objects.hashCode(this.id);
         hash = 67 * hash + Objects.hashCode(this.titulo);
         hash = 67 * hash + Objects.hashCode(this.url);
         hash = 67 * hash + Objects.hashCode(this.ano);
@@ -79,7 +89,7 @@ public class Obra {
             return false;
         
         Obra o = (Obra) obj;
-        return this.id == o.id && Objects.equals(ano, o.ano) && Objects.equals(this.titulo, o.titulo) && Objects.equals(this.url, o.url) && autores.equals(o.autores) && linguagens.equals(o.linguagens);
+        return Objects.equals(id, o.id) && Objects.equals(ano, o.ano) && Objects.equals(this.titulo, o.titulo) && Objects.equals(this.url, o.url) && Objects.equals(autores,o.autores) &&Objects.equals(linguagens,o.linguagens);
     }
     
 }

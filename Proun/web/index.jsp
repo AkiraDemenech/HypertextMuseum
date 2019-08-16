@@ -1,9 +1,11 @@
+
 ﻿<%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@page import="modelo.Obra"%>
-<%@page import="modelo.Suporte"%>
 <%@page import="modelo.Artista"%>
+<%@page import="modelo.Suporte"%>
 <%@page import="modelo.dados.SuporteDAO"%>
 <%@page import="modelo.dados.ArtistaDAO"%>
+<%@page import="modelo.dados.ObraDAO"%>
 
 <!DOCTYPE html>
 
@@ -30,38 +32,56 @@
 </style>
 
 <script>
+    
+    var banco = "<%
+        ObraDAO daobra = new ObraDAO();
+        ArtistaDAO daoart = daobra.daoart;
+        SuporteDAO daosup = daobra.daosup;
+        Suporte sup = null;
+        Artista art = null;
+                out.print (daobra.select().size());
+    %> obras, <%
+                out.print (daoart.select().size());
+    %> artistas e <%
+                out.print (daosup.select().size());
+    %> suportes."
+    
     function night_mode () {
         var is_day = document.getElementById('db').getAttribute('src').includes('der');
-        document.getElementById('db').setAttribute('src', ((is_day)?('bm'):('bd')) + "er.png");
         document.getElementById('bd').setAttribute('style', 'background-color: ' + ((is_day)?('black'):('white')) + '; color: ' + ((is_day)?('#00FF00'):('black')) + '; font-family: ' + ((is_day)?('Consolas'):('Times New Roman')) + ';')
+        document.getElementById('db').setAttribute('src', ((is_day)?('bm'):('bd')) + "er.png");
         is_day = !is_day;
-        //alert(is_day);
-        //return 0;
+    }
+    
+    function db_rel () {
+        alert(banco);
+        document.getElementById('db').title = banco;
     }
 </script>
         
         <title>
             <%
-                Suporte sup = null;
-                Artista art = null;
                 try {
-                    art = new ArtistaDAO().select(Integer.parseInt(request.getParameter("a")));
+                    art = daoart.select(Integer.parseInt(request.getParameter("a")));
                     out.println(art);
                 } catch (NumberFormatException n) {
                     try {
-                        sup = new SuporteDAO().select(Integer.parseInt(request.getParameter("s")));
+                        sup = daosup.select(Integer.parseInt(request.getParameter("s")));
                         out.println(sup);
                     } catch (NumberFormatException m) {
-                        out.println("Hypertext Museum Language");
+                        out.print ("Hypertext Museum Language");
                     }
                 }  
-            %> 
+            %>
         </title>
     </head>
     
     <body id="bd">
         <button id="bt" onClick="night_mode()">
             Modo temporariamente escuro
+        </button>
+        <button id="dt" onClick="db_rel()">
+            Sobre
         </button>
       
         <div class="row">
@@ -72,30 +92,29 @@
                     <input type="text" name="Titulo" placeholder="Título" value="" /> <br>
                     <input type="text" name="URL" placeholder="URL" value="" /> <br>
                     <input type="number" name="Ano" placeholder="Ano" value="" /><br>
-                    Autoria:<br><%
-                        for (int c=0; c<Artista.artistas.size(); c++) {
+                    Autoria:<br>
+<!--                    <input type="radio" name="autor" value="null" checked>Não creditada;<br>
+-->                 <%
+                        for (Artista a: daoart.select()) {
                     %>
-            
-            <input type="checkbox" name="<%
-                out.print("A" + c);
-            %>" value="<%
-                out.print(Artista.artistas.get(c).getId()); //BD alteraria
+            <input type="checkbox" name="<%out.print("A" + a.getId());%>" value="<%
+                out.print(a.getId()); //BD alteraria
             %>"><%
-                out.println(Artista.artistas.get(c)); //BD alteraria
-            %>[<a href="index.jsp?a=<%out.print(Artista.artistas.get(c).getId());%>">ver mais</a>]<br> <!--BD Alteraria-->
+                out.println(a); //BD alteraria
+            %>[<a href="index.jsp?a=<%out.print(a.getId());%>">ver mais</a>]<br> <!--BD Alteraria-->
                         <%}%>
                         <br>
-                    Linguagens:<br><%
-                        for (int c=0; c<Suporte.suportes.size(); c++) { //BD alteraria
+                    Linguagem:<br>
+<!--                    <input type="radio" name="linguagem" value="null" checked>Inespecífica;<br>
+-->                 <%
+                        for (Suporte s: daosup.select()) { //BD alteraria
                     %>
             
-            <input type="checkbox" name="<%
-                out.print("S" + c);
-            %>" value="<%
-                out.print(Suporte.suportes.get(c).getId()); //BD alteraria
+            <input type="checkbox" name="<%out.print("S" + s.getId());%>" value="<%
+                out.print(s.getId()); //BD alteraria
             %>"><%
-                out.println(Suporte.suportes.get(c)); //BD alteraria
-            %>[<a href="index.jsp?s=<%out.print(Suporte.suportes.get(c).getId());%>">ver mais</a>]<br> <!--BD Alteraria-->
+                out.println(s); //BD alteraria
+            %>[<a href="index.jsp?s=<%out.print(s.getId());%>">ver mais</a>]<br> <!--BD Alteraria-->
                         <%}%>
                     <br><input type="submit" value="Submeter obra" name="okart" />
                 </form>
@@ -125,12 +144,12 @@
                 out.println("<h2>[<button onClick=\"javascript:window.location.href='Cadastrar"+((sup==null)?("Artista?id="+art.getId()):("Suporte?id="+sup.getId()))+"'\">Apagar "+((art==null)?("suporte"):("artista"))+"</button>]</h2>"+
                             "<h1><a href='index.jsp'>Voltar para a galeria completa</h1></a>");
             
-            for (Obra o: Obra.obras) {
+            for (Obra o: daobra.select()) {
                 if(art!=null) {
-                    if(!o.autores.contains(art)) //
+                    if(!o.getAutores().contains(art)) //
                       continue;
                 } else if (sup!=null ) {
-                    if(!o.linguagens.contains(sup)) //
+                    if(!o.getLinguagens().contains(sup)) //
                       continue;
                 }
         %>
@@ -159,38 +178,30 @@
         %>
         <br><b>Autoria</b>:
         <%
-            for (Artista a: o.autores) {
+            for (Artista a: o.getAutores()) {
         %>
-          <a href="index.jsp?a=<%out.print(a.getId());%>">
+        <a href="index.jsp?a=<%out.print(a.getId());%>">
             <%
-                if(a!=null)
-                    out.println(((a.getAssinatura()==null)?((a.getNome()==null)?(a):(a.getNome())):(a.getAssinatura())));
-                else
-                    out.println("?");
+                out.print (((a.getAssinatura()==null)?((a.getNome()==null)?(a):(a.getNome())):(a.getAssinatura())));
             %></a>;
         <%
             }
         %>
         <br><b>Linguagem</b>:
         <%
-            for (Suporte a: o.linguagens) {
+            for (Suporte s: o.getLinguagens()) {
         %>
-          <a href="index.jsp?s=<%out.print(a.getId());%>">
+        <a href="index.jsp?s=<%out.print(s.getId());%>">
             <%
-                if(a!=null)
-                    out.println(((a.getDescricao()==null)?(a):(a.getDescricao())));
-                else
-                    out.println("?");
+                out.print (((s.getDescricao()==null)?(s):(s.getDescricao())));
             %></a>;
         <%
             }
-        %>
-        <%
-            }
+          }
         %>
       <p>
        <div style="text-align: right;">
-          <img id="db" src="bder.png" title="MER e DER do Banco de Dados criado mas não utilizado" alt='MER e DER do Banco de Dados criado porém não utilizado'>
+          <img id="db" src="bder.png" title='o Banco de Dados criado e só agora utilizado' onClick='javascript:if(document.getElementById("db").title!=banco) db_rel();'>
        </div>
     </body>
 </html>
